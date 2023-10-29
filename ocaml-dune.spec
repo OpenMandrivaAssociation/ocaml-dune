@@ -23,6 +23,11 @@ Group:		Development/OCaml
 License:	MIT and LGPLv2 and LGPLv2 with exceptions and ISC
 URL:		https://dune.build
 Source0:	https://github.com/ocaml/%{libname}/archive/%{version}/%{libname}-%{version}.tar.gz
+# When building without lwt, remove libraries that need it
+Patch0:         %{name}-no-lwt.patch
+# Temporary workaround for broken debuginfo (rhbz#2168932)
+# See https://github.com/ocaml/dune/issues/6929
+Patch1:         %{name}-debuginfo.patch
 BuildRequires:	emacs
 BuildRequires:	ocaml >= 4.07
 BuildRequires:	ocaml-findlib
