@@ -27,8 +27,8 @@ BuildRequires:	emacs
 BuildRequires:	ocaml >= 4.07
 BuildRequires:	ocaml-findlib
 BuildRequires:	ocaml-csexp
-BuildRequires:	python%{pyver}(sphinx)
-BuildRequires:	python%{pyver}egg(sphinx-rtd-theme)
+BuildRequires:	python%{pyver}dist(sphinx)
+BuildRequires:	python%{pyver}dist(sphinx-rtd-theme)
 
 %if %{without menhir}
 # Required by tests.
