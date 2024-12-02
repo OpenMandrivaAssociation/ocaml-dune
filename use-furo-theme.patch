@@ -1,0 +1,141 @@
+From ef461f6000ffbf2f7381e3b8d1d9c7ecdd518b20 Mon Sep 17 00:00:00 2001
+From: Etienne Millon <me@emillon.org>
+Date: Fri, 2 Aug 2024 10:28:46 +0200
+Subject: [PATCH] docs: use furo theme (#10786)
+
+* docs: use furo theme
+
+This theme has several advantages compared to `sphinx_rtd_theme`:
+
+- support for light and dark mode
+- a sidebar on the right with a table of contents for the current
+  documentation
+- better use of horizontal space (half of the screen is unused with
+  `sphinx_rtd_theme`)
+- "it looks better"
+
+Signed-off-by: Etienne Millon <me@emillon.org>
+
+* use sphinx >= 6
+
+Signed-off-by: Etienne Millon <me@emillon.org>
+
+---------
+
+Signed-off-by: Etienne Millon <me@emillon.org>
+---
+ doc/conf.py          | 12 +++---------
+ doc/coq.rst          |  3 ---
+ doc/hacking.rst      |  5 -----
+ doc/requirements.txt |  4 ++--
+ flake.nix            |  4 ++--
+ 5 files changed, 7 insertions(+), 21 deletions(-)
+
+diff --git a/doc/conf.py b/doc/conf.py
+index 787d072..f3bd7ee 100644
+--- a/doc/conf.py
++++ b/doc/conf.py
+@@ -74,7 +74,7 @@ language = "en"
+ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+ 
+ # The name of the Pygments (syntax highlighting) style to use.
+-pygments_style = 'sphinx'
++pygments_style = 'friendly'
+ 
+ # If true, `todo` and `todoList` produce output, else they produce nothing.
+ todo_include_todos = False
+@@ -85,13 +85,13 @@ todo_include_todos = False
+ # The theme to use for HTML and HTML Help pages.  See the documentation for
+ # a list of builtin themes.
+ #
+-html_theme = 'sphinx_rtd_theme'
++html_theme = 'furo'
+ 
+ # Theme options are theme-specific and customize the look and feel of a theme
+ # further.  For a list of options available for each theme, see the
+ # documentation.
+ #
+-html_theme_options = {'navigation_depth': 6}
++html_theme_options = {}
+ 
+ # Add any paths that contain custom static files (such as style sheets) here,
+ # relative to this directory. They are copied after the builtin static files,
+@@ -155,12 +155,6 @@ texinfo_documents = [
+      'Miscellaneous'),
+ ]
+ 
+-
+-
+-import sphinx_rtd_theme
+-
+-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+-
+ html_context = {
+     'display_github': True,
+     'github_user': 'ocaml',
+diff --git a/doc/coq.rst b/doc/coq.rst
+index 2266cc4..d20a4da 100644
+--- a/doc/coq.rst
++++ b/doc/coq.rst
+@@ -11,9 +11,6 @@ Coq
+    - reference info for stanzas and variables
+    - tutorials (the examples part)
+ 
+-.. contents:: Table of Contents
+-    :depth: 3
+-
+ Introduction
+ ------------
+ 
+diff --git a/doc/hacking.rst b/doc/hacking.rst
+index 096ee5d..6f1ff14 100644
+--- a/doc/hacking.rst
++++ b/doc/hacking.rst
+@@ -10,11 +10,6 @@ general guidelines specific to Dune. However, given that Dune is a large project
+ developed by many different people, it's important to follow these guidelines in
+ order to keep the project in a good state and pleasant to work on for everybody.
+ 
+-.. contents:: Table of Contents
+-   :depth: 1
+-   :local:
+-   :backlinks: none
+-
+ Dependencies
+ ============
+ 
+diff --git a/doc/requirements.txt b/doc/requirements.txt
+index 21f8f5f..b4a0e74 100644
+--- a/doc/requirements.txt
++++ b/doc/requirements.txt
+@@ -1,4 +1,4 @@
+-sphinx >= 4.5.0, < 6
+-sphinx_rtd_theme >= 1.0.0
++sphinx >= 6
++furo
+ sphinx-copybutton >= 0.5.0
+ sphinx-design
+diff --git a/flake.nix b/flake.nix
+index 00f97e1..ca349f2 100644
+--- a/flake.nix
++++ b/flake.nix
+@@ -122,7 +122,7 @@
+ 
+               docInputs = with pkgs'.python3.pkgs; [
+                 sphinx-autobuild
+-                sphinx_rtd_theme
++                furo
+                 sphinx-copybutton
+                 sphinx-design
+               ];
+@@ -164,7 +164,7 @@
+                   sphinx
+                   sphinx-autobuild
+                   python310Packages.sphinx-copybutton
+-                  python310Packages.sphinx-rtd-theme
++                  python310Packages.furo
+                   python310Packages.sphinx-design
+                 ]
+               );
+-- 
+2.46.2
+

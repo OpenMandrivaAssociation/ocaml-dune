@@ -1,0 +1,12 @@
+%buildsystem_dune_generate_buildrequires() \
+	echo 'ocaml-dune' \
+	echo 'ocaml-compiler'
+
+%buildsystem_dune_build() \
+	%dune_build
+
+%buildsystem_dune_install() \
+	%dune_install
+
+%buildsystem_dune_check() \
+	%dune_check
