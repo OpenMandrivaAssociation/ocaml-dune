@@ -12,7 +12,7 @@
 %global giturl  https://github.com/ocaml/dune
 
 Name:           ocaml-dune
-Version:        3.16.1
+Version:        3.24.1
 Release:        1
 Summary:        Composable build system for OCaml and Reason
 
@@ -461,7 +461,7 @@ Dune file editing support for the emacs editor
 %autosetup -N -n dune-%{version}
 %if %{without lwt}
 %autopatch 0 -p1
-rm -fr otherlibs/dune-rpc-lwt dune-rpc-lwt.opam
+rm -fr otherlibs/dune-rpc-lwt opam/dune-rpc-lwt.opam dune-rpc-lwt.opam
 %endif
 %autopatch -m1 -p1
 
