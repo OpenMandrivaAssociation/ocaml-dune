@@ -13,7 +13,7 @@
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:        3
+Release:        4
 Summary:        Composable build system for OCaml and Reason
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
@@ -484,7 +484,8 @@ rm -fr otherlibs/dune-rpc-lwt opam/dune-rpc-lwt.opam dune-rpc-lwt.opam
 # We also want the libraries
 %if !0%{?rhel}
 # Do not use the bundled csexp and pp when building them
-rm -fr vendor/{csexp,pp}
+# Keep all vendored libs (incl. re); unbundling csexp/pp breaks re resolution
+# rm -fr vendor/{csexp,pp}
 %endif
 ./dune.exe build %{?_smp_mflags} --verbose --release @install
 
