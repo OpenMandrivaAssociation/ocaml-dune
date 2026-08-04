@@ -13,7 +13,7 @@
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:        5
+Release:        6
 Summary:        Composable build system for OCaml and Reason
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
@@ -465,16 +465,11 @@ rm -fr otherlibs/dune-rpc-lwt opam/dune-rpc-lwt.opam dune-rpc-lwt.opam
 %endif
 %autopatch -m1 -p1
 
-# vendor/re sources ship without dune files; generate them so dune-glob can find "re"
-cat > vendor/re/dune-project << 'EOF'
-(lang dune 3.0)
-(name re)
-EOF
+# vendor/re ships sources only; add a library stanza under the main project
 cat > vendor/re/src/dune << 'EOF'
 (library
- (name re)
- (public_name re)
- (libraries unix))
+ (name re__)
+ (public_name re))
 EOF
 
 %build
