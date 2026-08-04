@@ -9,11 +9,16 @@
 
 %bcond_with docs
 
+# Libraries currently required in the distro (aligned with Fedora bootstrap set).
+# dune-glob/action-plugin need a public "re" findlib package and are omitted.
+# dune-rpc/chrome-trace/ocamlc-loc are not needed by reverse deps yet.
+%global pkgbuild dune-build-info,dune-configurator,dune-private-libs,dune-site,dyn,fs-io,ordering,stdune,top-closure,xdg
+
 %global giturl  https://github.com/ocaml/dune
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:        10
+Release:        11
 Summary:        Composable build system for OCaml and Reason
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
@@ -409,11 +414,30 @@ Requires:       ocaml-ordering%{?_isa} = %{version}-%{release}
 The ocaml-ordering-devel package contains libraries and signature files
 for developing applications that use ocaml-ordering.
 
+%package     -n ocaml-fs-io
+Summary:        File-system IO helpers used by dune
+License:        MIT
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description -n ocaml-fs-io
+Miscellaneous filesystem operations used by dune libraries.
+
+%package     -n ocaml-fs-io-devel
+Summary:        Development files for ocaml-fs-io
+License:        MIT
+Requires:       ocaml-fs-io%{?_isa} = %{version}-%{release}
+
+%description -n ocaml-fs-io-devel
+The ocaml-fs-io-devel package contains libraries and signature files
+for developing applications that use ocaml-fs-io.
+
 %package     -n ocaml-stdune
 Summary:        Dune's unstable standard library
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       ocaml-dyn%{?_isa} = %{version}-%{release}
+Requires:       ocaml-fs-io%{?_isa} = %{version}-%{release}
+Requires:       ocaml-top-closure%{?_isa} = %{version}-%{release}
 
 %description -n ocaml-stdune
 This package contains Dune's unstable standard library.
@@ -423,6 +447,8 @@ Summary:        Development files for ocaml-stdune
 License:        MIT
 Requires:       ocaml-stdune%{?_isa} = %{version}-%{release}
 Requires:       ocaml-dyn-devel%{?_isa} = %{version}-%{release}
+Requires:       ocaml-fs-io-devel%{?_isa} = %{version}-%{release}
+Requires:       ocaml-top-closure-devel%{?_isa} = %{version}-%{release}
 %if !0%{?rhel}
 Requires:       ocaml-csexp-devel%{?_isa}
 %endif
@@ -430,6 +456,23 @@ Requires:       ocaml-csexp-devel%{?_isa}
 %description -n ocaml-stdune-devel
 The ocaml-stdune-devel package contains libraries and signature files
 for developing applications that use ocaml-stdune.
+
+%package     -n ocaml-top-closure
+Summary:        Topological closure over a graph
+License:        MIT
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description -n ocaml-top-closure
+Topological closure used by dune's standard library.
+
+%package     -n ocaml-top-closure-devel
+Summary:        Development files for ocaml-top-closure
+License:        MIT
+Requires:       ocaml-top-closure%{?_isa} = %{version}-%{release}
+
+%description -n ocaml-top-closure-devel
+The ocaml-top-closure-devel package contains libraries and signature
+files for developing applications that use ocaml-top-closure.
 
 %package     -n ocaml-xdg
 Summary:        XDG Base Directory Specification
@@ -467,42 +510,43 @@ rm -fr otherlibs/dune-rpc-lwt opam/dune-rpc-lwt.opam dune-rpc-lwt.opam
 
 %build
 ./configure \
-  --bindir %{_bindir} \
-  --datadir %{_datadir} \
-  --docdir %{_prefix}/doc \
-  --etcdir %{_sysconfdir} \
-  --libdir %{ocamldir} \
-  --libexecdir %{ocamldir} \
-  --mandir %{_mandir} \
-  --sbindir %{_sbindir}
+	--prefix %{_prefix} \
+	--bindir %{_bindir} \
+	--datadir %{_datadir} \
+	--docdir %{_prefix}/doc \
+	--etcdir %{_sysconfdir} \
+	--libdir %{ocamldir} \
+	--libexecdir %{ocamldir} \
+	--mandir %{_mandir} \
+	--sbindir %{_sbindir}
 
-%make_build release
+# Bootstrap then build dune binary + required libraries in one pass.
+# A second selective -p build without "dune" drops dune.install artifacts
+# and breaks make install.
+ocaml boot/bootstrap.ml
+_boot/dune.exe build -p dune,%{pkgbuild} %{?_smp_mflags} --verbose \
+	--profile dune-bootstrap
 %if %{with docs}
 %make_build doc
 %endif
 
-# Libraries (exclude dune-glob/action-plugin: they need public "re")
-_boot/dune.exe build %{?_smp_mflags} --verbose --profile dune-bootstrap \
-	-p dune-build-info,dune-configurator,dune-private-libs,dune-site,dune-rpc,chrome-trace,dyn,ocamlc-loc,ordering,stdune,xdg,fs-io,top-closure
-
 %install
-# Binary from bootstrap (make release / make install)
 %make_install
 
-# Libraries only (dune package already installed above)
-_boot/dune.exe install --destdir=%{buildroot} --profile dune-bootstrap \
-	-p dune-build-info,dune-configurator,dune-private-libs,dune-site,dune-rpc,chrome-trace,dyn,ocamlc-loc,ordering,stdune,xdg,fs-io,top-closure
+# Libraries (dune package itself already installed by make install)
+_boot/dune.exe install --destdir=%{buildroot} -p %{pkgbuild}
 
 # We use %%doc below
 rm -fr %{buildroot}%{_prefix}/doc
 
 # Generate %%files lists
 %ocaml_files -s
-# Subpackages not built for 3.24 bootstrap path
-for f in dune-glob dune-glob-devel dune-action-plugin dune-action-plugin-devel; do
+# Subpackages not in the bootstrap set for 3.24
+for f in dune-glob dune-glob-devel dune-action-plugin dune-action-plugin-devel \
+	dune-rpc dune-rpc-devel chrome-trace chrome-trace-devel \
+	ocamlc-loc ocamlc-loc-devel; do
 	[ -f .ofiles-$f ] || : > .ofiles-$f
 done
-
 
 mkdir -p %{buildroot}%{_prefix}/lib/rpm/macros.d
 install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
@@ -565,6 +609,10 @@ install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
 
 %files -n ocaml-dyn-devel -f .ofiles-dyn-devel
 
+%files -n ocaml-fs-io -f .ofiles-fs-io
+
+%files -n ocaml-fs-io-devel -f .ofiles-fs-io-devel
+
 %files -n ocaml-ocamlc-loc -f .ofiles-ocamlc-loc
 
 %files -n ocaml-ocamlc-loc-devel -f .ofiles-ocamlc-loc-devel
@@ -576,6 +624,10 @@ install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
 %files -n ocaml-stdune -f .ofiles-stdune
 
 %files -n ocaml-stdune-devel -f .ofiles-stdune-devel
+
+%files -n ocaml-top-closure -f .ofiles-top-closure
+
+%files -n ocaml-top-closure-devel -f .ofiles-top-closure-devel
 
 %files -n ocaml-xdg -f .ofiles-xdg
 
