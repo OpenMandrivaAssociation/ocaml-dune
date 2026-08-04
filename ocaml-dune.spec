@@ -18,7 +18,7 @@
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:        11
+Release:	12
 Summary:        Composable build system for OCaml and Reason
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
@@ -100,6 +100,18 @@ Provides:       bundled(ocaml-uutf) = 1.0.3
 
 Provides:       dune = %{version}-%{release}
 
+# Subpackages dropped from the 3.24 bootstrap set (need public re or unused)
+Obsoletes:      %{name}-action-plugin < %{version}-%{release}
+Obsoletes:      %{name}-action-plugin-devel < %{version}-%{release}
+Obsoletes:      %{name}-glob < %{version}-%{release}
+Obsoletes:      %{name}-glob-devel < %{version}-%{release}
+Obsoletes:      %{name}-rpc < %{version}-%{release}
+Obsoletes:      %{name}-rpc-devel < %{version}-%{release}
+Obsoletes:      ocaml-chrome-trace < %{version}-%{release}
+Obsoletes:      ocaml-chrome-trace-devel < %{version}-%{release}
+Obsoletes:      ocaml-ocamlc-loc < %{version}-%{release}
+Obsoletes:      ocaml-ocamlc-loc-devel < %{version}-%{release}
+
 # The dune rules module requires Toploop
 Requires:       ocaml-compiler-libs%{?_isa}
 
@@ -150,29 +162,6 @@ HTML documentation for dune, a composable build system for OCaml.
 %endif
 
 ## Dune libraries
-
-%package        action-plugin
-Summary:        API for writing dynamic dune actions
-License:        MIT
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       %{name}-glob%{?_isa} = %{version}-%{release}
-
-%description    action-plugin
-This experimental library provides an API for writing dynamic Dune
-actions.  Dynamic dune actions do not need to declare their dependencies
-upfront; they are instead discovered automatically during the execution
-of the action.
-
-%package        action-plugin-devel
-Summary:        Development files for %{name}-action-plugin
-License:        MIT
-Requires:       %{name}-action-plugin%{?_isa} = %{version}-%{release}
-Requires:       %{name}-glob-devel%{?_isa} = %{version}-%{release}
-
-%description    action-plugin-devel
-The ocaml-dune-action-plugin-devel package contains libraries and
-signature files for developing applications that use
-ocaml-dune-action-plugin.
 
 %package        build-info
 Summary:        Embed build information in an executable
@@ -227,28 +216,6 @@ The ocaml-dune-configurator-devel package contains libraries and
 signature files for developing applications that use
 ocaml-dune-configurator.
 
-%package        glob
-Summary:        Parser and interpreter for dune language globs
-License:        MIT
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       %{name}-private-libs%{?_isa} = %{version}-%{release}
-Requires:       ocaml-stdune%{?_isa} = %{version}-%{release}
-
-%description    glob
-Dune-glob provides a parser and interpreter for globs as understood by
-the dune language.
-
-%package        glob-devel
-Summary:        Development files for %{name}-glob
-License:        MIT
-Requires:       %{name}-glob%{?_isa} = %{version}-%{release}
-Requires:       %{name}-private-libs-devel%{?_isa} = %{version}-%{release}
-Requires:       ocaml-stdune-devel%{?_isa} = %{version}-%{release}
-
-%description    glob-devel
-The ocaml-dune-glob-devel package contains libraries and signature files
-for developing applications that use ocaml-dune-glob.
-
 %package        private-libs
 Summary:        Private dune libraries
 License:        MIT
@@ -269,27 +236,6 @@ Requires:       ocaml-dyn-devel%{?_isa} = %{version}-%{release}
 %description    private-libs-devel
 The ocaml-dune-private-libs-devel package contains libraries and
 signature files for other dune packages.  Do not use.
-
-%package        rpc
-Summary:        Communicate with dune using rpc
-License:        MIT
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       ocaml-stdune%{?_isa} = %{version}-%{release}
-Requires:       ocaml-xdg%{?_isa} = %{version}-%{release}
-
-%description    rpc
-This package contains a library used to communicate with dune over rpc.
-
-%package        rpc-devel
-Summary:        Development files for %{name}-rpc
-License:        MIT
-Requires:       %{name}-rpc%{?_isa} = %{version}-%{release}
-Requires:       ocaml-stdune-devel%{?_isa} = %{version}-%{release}
-Requires:       ocaml-xdg-devel%{?_isa} = %{version}-%{release}
-
-%description    rpc-devel
-The ocaml-dune-rpc-devel package contains libraries and signature files
-for developing applications that use ocaml-rpc.
 
 %if %{with lwt}
 %package        rpc-lwt
@@ -337,25 +283,6 @@ Requires:       %{name}-private-libs-devel%{?_isa} = %{version}-%{release}
 The ocaml-dune-site-devel package contains libraries and signature files
 for developing applications that use ocaml-dune-site.
 
-%package     -n ocaml-chrome-trace
-Summary:        Chrome trace event generation library
-License:        MIT
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description -n ocaml-chrome-trace
-Library to output trace data to a file in Chrome's trace_event format.
-This format is compatible with chrome trace viewer (chrome://tracing).
-The trace viewer is part of the catapult project.
-
-%package     -n ocaml-chrome-trace-devel
-Summary:        Development files for ocaml-chrome-trace
-License:        MIT
-Requires:       ocaml-chrome-trace%{?_isa} = %{version}-%{release}
-
-%description -n ocaml-chrome-trace-devel
-The ocaml-dyn-devel package contains libraries and signature files for
-developing applications that use ocaml-dyn.
-
 %package     -n ocaml-dyn
 Summary:        Dynamic types
 License:        MIT
@@ -377,25 +304,6 @@ Requires:       ocaml-pp-devel%{?_isa}
 %description -n ocaml-dyn-devel
 The ocaml-dyn-devel package contains libraries and signature files for
 developing applications that use ocaml-dyn.
-
-%package     -n ocaml-ocamlc-loc
-Summary:        Parse OCaml compiler output into structured form
-License:        MIT
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       ocaml-dyn%{?_isa} = %{version}-%{release}
-
-%description -n ocaml-ocamlc-loc
-Parse OCaml compiler output into structured form.
-
-%package     -n ocaml-ocamlc-loc-devel
-Summary:        Development files for ocaml-ocamlc-loc
-License:        MIT
-Requires:       ocaml-ocamlc-loc%{?_isa} = %{version}-%{release}
-Requires:       ocaml-dyn-devel%{?_isa} = %{version}-%{release}
-
-%description -n ocaml-ocamlc-loc-devel
-The ocaml-ordering-devel package contains libraries and signature files
-for developing applications that use ocaml-ocamlc-loc.
 
 %package     -n ocaml-ordering
 Summary:        Element ordering
@@ -541,12 +449,6 @@ rm -fr %{buildroot}%{_prefix}/doc
 
 # Generate %%files lists
 %ocaml_files -s
-# Subpackages not in the bootstrap set for 3.24
-for f in dune-glob dune-glob-devel dune-action-plugin dune-action-plugin-devel \
-	dune-rpc dune-rpc-devel chrome-trace chrome-trace-devel \
-	ocamlc-loc ocamlc-loc-devel; do
-	[ -f .ofiles-$f ] || : > .ofiles-$f
-done
 
 mkdir -p %{buildroot}%{_prefix}/lib/rpm/macros.d
 install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
@@ -563,10 +465,6 @@ install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
 %doc doc/_build/*
 %endif
 
-%files action-plugin -f .ofiles-dune-action-plugin
-
-%files action-plugin-devel -f .ofiles-dune-action-plugin-devel
-
 %files build-info -f .ofiles-dune-build-info
 
 %files build-info-devel -f .ofiles-dune-build-info-devel
@@ -579,17 +477,9 @@ install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
 %{ocamldir}/dune/dune-package
 %{ocamldir}/dune/opam
 
-%files glob -f .ofiles-dune-glob
-
-%files glob-devel -f .ofiles-dune-glob-devel
-
 %files private-libs -f .ofiles-dune-private-libs
 
 %files private-libs-devel -f .ofiles-dune-private-libs-devel
-
-%files rpc -f .ofiles-dune-rpc
-
-%files rpc-devel -f .ofiles-dune-rpc-devel
 
 %if %{with lwt}
 %files rpc-lwt -f .ofiles-dune-rpc-lwt
@@ -601,10 +491,6 @@ install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
 
 %files site-devel -f .ofiles-dune-site-devel
 
-%files -n ocaml-chrome-trace -f .ofiles-chrome-trace
-
-%files -n ocaml-chrome-trace-devel -f .ofiles-chrome-trace-devel
-
 %files -n ocaml-dyn -f .ofiles-dyn
 
 %files -n ocaml-dyn-devel -f .ofiles-dyn-devel
@@ -612,10 +498,6 @@ install -c -m 644 %{S:1} %{buildroot}%{_prefix}/lib/rpm/macros.d/
 %files -n ocaml-fs-io -f .ofiles-fs-io
 
 %files -n ocaml-fs-io-devel -f .ofiles-fs-io-devel
-
-%files -n ocaml-ocamlc-loc -f .ofiles-ocamlc-loc
-
-%files -n ocaml-ocamlc-loc-devel -f .ofiles-ocamlc-loc-devel
 
 %files -n ocaml-ordering -f .ofiles-ordering
 
