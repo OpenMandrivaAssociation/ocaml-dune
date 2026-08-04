@@ -7,13 +7,13 @@
 # library in OpenMandriva, so don't build it.
 %bcond lwt 0
 
-%bcond_without docs
+%bcond_with docs
 
 %global giturl  https://github.com/ocaml/dune
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:        2
+Release:        3
 Summary:        Composable build system for OCaml and Reason
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
