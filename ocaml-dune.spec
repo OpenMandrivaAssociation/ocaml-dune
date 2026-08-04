@@ -13,7 +13,7 @@
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:        4
+Release:        5
 Summary:        Composable build system for OCaml and Reason
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
@@ -465,6 +465,18 @@ rm -fr otherlibs/dune-rpc-lwt opam/dune-rpc-lwt.opam dune-rpc-lwt.opam
 %endif
 %autopatch -m1 -p1
 
+# vendor/re sources ship without dune files; generate them so dune-glob can find "re"
+cat > vendor/re/dune-project << 'EOF'
+(lang dune 3.0)
+(name re)
+EOF
+cat > vendor/re/src/dune << 'EOF'
+(library
+ (name re)
+ (public_name re)
+ (libraries unix))
+EOF
+
 %build
 ./configure \
   --bindir %{_bindir} \
@@ -481,19 +493,16 @@ rm -fr otherlibs/dune-rpc-lwt opam/dune-rpc-lwt.opam dune-rpc-lwt.opam
 %make_build doc
 %endif
 
-# We also want the libraries
-%if !0%{?rhel}
-# Do not use the bundled csexp and pp when building them
-# Keep all vendored libs (incl. re); unbundling csexp/pp breaks re resolution
-# rm -fr vendor/{csexp,pp}
-%endif
-./dune.exe build %{?_smp_mflags} --verbose --release @install
+# Build main binary + selected libraries with bootstrap profile
+# (non-bootstrap needs a proper "re" findlib package; vendor/re has no dune files)
+_boot/dune.exe build %{?_smp_mflags} --verbose --profile dune-bootstrap \
+	-p dune,dune-action-plugin,dune-build-info,dune-configurator,dune-glob,dune-private-libs,dune-rpc,dune-site,chrome-trace,dyn,ocamlc-loc,ordering,stdune,xdg
 
 %install
 %make_install
 
-# Install the libraries
-./dune.exe install --destdir=%{buildroot}
+_boot/dune.exe install --destdir=%{buildroot} --profile dune-bootstrap \
+	-p dune,dune-action-plugin,dune-build-info,dune-configurator,dune-glob,dune-private-libs,dune-rpc,dune-site,chrome-trace,dyn,ocamlc-loc,ordering,stdune,xdg
 
 # We use %%doc below
 rm -fr %{buildroot}%{_prefix}/doc
