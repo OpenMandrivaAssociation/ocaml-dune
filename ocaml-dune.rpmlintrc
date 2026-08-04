@@ -1,0 +1,7 @@
+# False positives: package names match locales-* patterns
+addFilter("no-dependency-on locales-dyn")
+addFilter("no-dependency-on locales-io")
+# Group tag is optional/legacy
+addFilter("no-group-tag")
+# Obsoleted subpackages intentionally not Provided
+addFilter("obsolete-not-provided")

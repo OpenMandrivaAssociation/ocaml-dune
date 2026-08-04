@@ -1,2 +1,3 @@
 sources:
   dune-3.24.1.tar.gz: 3cca1fd45115e75a21c618d47bab013f7dfa749a
+  ocaml-dune.rpmlintrc: fa8a05fec3eda6961aa6ed31becc51780cab50d3

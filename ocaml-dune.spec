@@ -18,8 +18,9 @@
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:	12
+Release:	13
 Summary:        Composable build system for OCaml and Reason
+Group:          Development/OCaml
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
 # ISC:
@@ -48,6 +49,7 @@ URL:            https://dune.build
 VCS:            git:%{giturl}.git
 Source:         %{giturl}/archive/%{version}/dune-%{version}.tar.gz
 Source1:	macros.buildsys.dune
+Source2:	ocaml-dune.rpmlintrc
 # When building without lwt, remove libraries that need it
 Patch:          https://src.fedoraproject.org/rpms/ocaml-dune/raw/rawhide/f/%{name}-no-lwt.patch
 # Temporary workaround for broken debuginfo (rhbz#2168932)
@@ -155,6 +157,7 @@ productive.
 # - _static/js
 License:        MIT AND BSD-2-Clause
 Summary:        HTML documentation for %{name}
+Group:          Development/OCaml
 BuildArch:      noarch
 
 %description    doc
@@ -165,6 +168,7 @@ HTML documentation for dune, a composable build system for OCaml.
 
 %package        build-info
 Summary:        Embed build information in an executable
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
@@ -177,6 +181,7 @@ development to get a precise reference of when the executable was built.
 
 %package        build-info-devel
 Summary:        Development files for %{name}-build-info
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}-build-info%{?_isa} = %{version}-%{release}
 
@@ -186,6 +191,7 @@ files for developing applications that use ocaml-dune-build-info.
 
 %package        configurator
 Summary:        Helper library for gathering system configuration
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       ocaml-stdune%{?_isa} = %{version}-%{release}
@@ -203,6 +209,7 @@ to:
 
 %package        configurator-devel
 Summary:        Development files for %{name}-configurator
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}-configurator%{?_isa} = %{version}-%{release}
 Requires:       ocaml-stdune-devel%{?_isa} = %{version}-%{release}
@@ -218,6 +225,7 @@ ocaml-dune-configurator.
 
 %package        private-libs
 Summary:        Private dune libraries
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       ocaml-stdune%{?_isa} = %{version}-%{release}
@@ -229,6 +237,7 @@ no stability guarantee.
 
 %package        private-libs-devel
 Summary:        Development files for %{name}-private-libs
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}-private-libs%{?_isa} = %{version}-%{release}
 Requires:       ocaml-dyn-devel%{?_isa} = %{version}-%{release}
@@ -240,6 +249,7 @@ signature files for other dune packages.  Do not use.
 %if %{with lwt}
 %package        rpc-lwt
 Summary:        Communicate with dune using rpc and Lwt
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-rpc%{?_isa} = %{version}-%{release}
@@ -250,6 +260,7 @@ using Lwt.
 
 %package        rpc-lwt-devel
 Summary:        Development files for %{name}-rpc-lwt
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}-rpc-lwt%{?_isa} = %{version}-%{release}
 Requires:       %{name}-rpc-devel%{?_isa} = %{version}-%{release}
@@ -265,6 +276,7 @@ files for developing applications that use ocaml-rpc-lwt.
 
 %package        site
 Summary:        Embed location information inside executables and libraries
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-private-libs%{?_isa} = %{version}-%{release}
@@ -275,6 +287,7 @@ and libraries.
 
 %package        site-devel
 Summary:        Development files for %{name}-site
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}-site%{?_isa} = %{version}-%{release}
 Requires:       %{name}-private-libs-devel%{?_isa} = %{version}-%{release}
@@ -285,6 +298,7 @@ for developing applications that use ocaml-dune-site.
 
 %package     -n ocaml-dyn
 Summary:        Dynamic types
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       ocaml-ordering%{?_isa} = %{version}-%{release}
@@ -294,6 +308,7 @@ This library supports dynamic types in OCaml.
 
 %package     -n ocaml-dyn-devel
 Summary:        Development files for ocaml-dyn
+Group:          Development/OCaml
 License:        MIT
 Requires:       ocaml-dyn%{?_isa} = %{version}-%{release}
 Requires:       ocaml-ordering-devel%{?_isa} = %{version}-%{release}
@@ -307,6 +322,7 @@ developing applications that use ocaml-dyn.
 
 %package     -n ocaml-ordering
 Summary:        Element ordering
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
@@ -315,6 +331,7 @@ Element ordering in OCaml.
 
 %package     -n ocaml-ordering-devel
 Summary:        Development files for ocaml-ordering
+Group:          Development/OCaml
 License:        MIT
 Requires:       ocaml-ordering%{?_isa} = %{version}-%{release}
 
@@ -324,6 +341,7 @@ for developing applications that use ocaml-ordering.
 
 %package     -n ocaml-fs-io
 Summary:        File-system IO helpers used by dune
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
@@ -332,6 +350,7 @@ Miscellaneous filesystem operations used by dune libraries.
 
 %package     -n ocaml-fs-io-devel
 Summary:        Development files for ocaml-fs-io
+Group:          Development/OCaml
 License:        MIT
 Requires:       ocaml-fs-io%{?_isa} = %{version}-%{release}
 
@@ -341,6 +360,7 @@ for developing applications that use ocaml-fs-io.
 
 %package     -n ocaml-stdune
 Summary:        Dune's unstable standard library
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       ocaml-dyn%{?_isa} = %{version}-%{release}
@@ -352,6 +372,7 @@ This package contains Dune's unstable standard library.
 
 %package     -n ocaml-stdune-devel
 Summary:        Development files for ocaml-stdune
+Group:          Development/OCaml
 License:        MIT
 Requires:       ocaml-stdune%{?_isa} = %{version}-%{release}
 Requires:       ocaml-dyn-devel%{?_isa} = %{version}-%{release}
@@ -367,6 +388,7 @@ for developing applications that use ocaml-stdune.
 
 %package     -n ocaml-top-closure
 Summary:        Topological closure over a graph
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
@@ -375,6 +397,7 @@ Topological closure used by dune's standard library.
 
 %package     -n ocaml-top-closure-devel
 Summary:        Development files for ocaml-top-closure
+Group:          Development/OCaml
 License:        MIT
 Requires:       ocaml-top-closure%{?_isa} = %{version}-%{release}
 
@@ -384,6 +407,7 @@ files for developing applications that use ocaml-top-closure.
 
 %package     -n ocaml-xdg
 Summary:        XDG Base Directory Specification
+Group:          Development/OCaml
 License:        MIT
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
@@ -392,6 +416,7 @@ This package contains the XDG Base Directory Specification.
 
 %package     -n ocaml-xdg-devel
 Summary:        Development files for ocaml-xdg
+Group:          Development/OCaml
 License:        MIT
 Requires:       ocaml-xdg%{?_isa} = %{version}-%{release}
 
@@ -401,6 +426,7 @@ developing applications that use ocaml-xdg.
 
 %package emacs
 Summary:	Dune file editing support for the emacs editor
+Group:          Development/OCaml
 Requires:	emacs
 License:	MIT
 Requires:	%{name}%{?_isa} = %{EVRD}
