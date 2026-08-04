@@ -13,7 +13,7 @@
 
 Name:           ocaml-dune
 Version:        3.24.1
-Release:        8
+Release:        9
 Summary:        Composable build system for OCaml and Reason
 
 # Dune itself is MIT.  Some bundled libraries have a different license:
@@ -486,8 +486,7 @@ _boot/dune.exe build %{?_smp_mflags} --verbose --profile dune-bootstrap \
 	-p dune-build-info,dune-configurator,dune-private-libs,dune-site,dune-rpc,chrome-trace,dyn,ocamlc-loc,ordering,stdune,xdg,fs-io,top-closure
 
 %install
-%make_install
-
+# Install dune binary + libraries (avoid make install which expects full dune.install layout)
 _boot/dune.exe install --destdir=%{buildroot} --profile dune-bootstrap \
 	-p dune,dune-build-info,dune-configurator,dune-private-libs,dune-site,dune-rpc,chrome-trace,dyn,ocamlc-loc,ordering,stdune,xdg,fs-io,top-closure
 
